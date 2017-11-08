@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_pro_audio"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="mobiads.com.bomba.ui.ProAudio"
+    tools:showIn="@layout/activity_pro_audio">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/signin_btn"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_16sdp"
+            android:textColorHint="@color/colorBlack"
+            android:theme="@style/CreateToneTheme">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/colorBlack"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:hint="Description"
+                android:inputType="phone"
+                android:paddingBottom="20dp"
+                android:paddingRight="20dp"
+                android:textColor="@color/colorBlack"
+                android:textColorHint="@color/colorBlack"
+                android:textSize="@dimen/_12sdp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <Button android:id="@+id/someone_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:text="create for someone"
+            android:textSize="@dimen/_14ssp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/red_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_24sdp"/>
+
+
+        <Button android:id="@+id/request_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:text="request a pro audio"
+            android:textSize="@dimen/_14ssp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/red_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_24sdp"/>
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

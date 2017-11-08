@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_create_tone"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="mobiads.com.bomba.ui.CreateTone"
+    tools:showIn="@layout/activity_create_tone"
+    android:theme="@style/CreateToneTheme">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+
+
+        <Button android:id="@+id/create_tone_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:text="create your own"
+            android:textSize="@dimen/_14ssp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/red_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_24sdp"/>
+
+
+        <Button android:id="@+id/someone_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:text="create for someone"
+            android:textSize="@dimen/_14ssp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/red_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_24sdp"/>
+
+
+        <Button android:id="@+id/request_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:text="request a pro audio"
+            android:textSize="@dimen/_14ssp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/red_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_24sdp"/>
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</RelativeLayout>

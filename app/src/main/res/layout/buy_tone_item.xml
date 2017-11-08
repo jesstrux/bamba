@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="@dimen/_100sdp"
+    android:layout_height="@dimen/_140sdp"
+    android:layout_marginBottom="@dimen/_4sdp"
+    android:layout_marginLeft="@dimen/_4sdp"
+    android:layout_marginRight="@dimen/_4sdp"
+    android:background="@color/colorGreyYangu">
+
+    <ImageView android:id="@+id/artist_img"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_80sdp"
+        tools:src="@drawable/jay_z"
+        android:scaleType="centerCrop"/>
+
+    <TextView android:id="@+id/artist_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Jay z"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/_12ssp"
+        android:layout_marginTop="@dimen/_4sdp"/>
+
+    <TextView android:id="@+id/artist_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Forever young"
+        android:textColor="@color/colorDarkGrey"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:textSize="@dimen/_10ssp"/>
+
+    <TextView android:id="@+id/amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Tsh 2000"
+        android:textColor="@color/colorPurple"
+        android:textSize="@dimen/_10ssp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_2sdp"/>
+</LinearLayout>

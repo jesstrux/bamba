@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="bomba.com.mobiads.bamba">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Home"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.Signin"
+            android:label="@string/title_activity_signin"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.CreateTone"
+            android:label="@string/title_activity_create_tone"
+            android:parentActivityName=".Home"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bomba.com.mobiads.bamba.Home" />
+        </activity>
+        <activity
+            android:name=".ui.TuneDetails"
+            android:label="@string/title_activity_tune_details"
+            android:parentActivityName=".Home"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bomba.com.mobiads.bamba.Home" />
+        </activity>
+        <activity
+            android:name=".ui.CreateAccount"
+            android:label="@string/title_activity_create_account"
+            android:parentActivityName=".ui.Signin"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bomba.com.mobiads.bamba.ui.Signin" />
+        </activity>
+        <activity
+            android:name=".ui.Pay"
+            android:label="@string/title_activity_pay"
+            android:parentActivityName=".Home"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bomba.com.mobiads.bamba.Home" />
+        </activity>
+        <activity
+            android:name=".ui.RegisterBusiness"
+            android:label="@string/title_activity_register_business"
+            android:parentActivityName=".Home"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bomba.com.mobiads.bamba.Home" />
+        </activity>
+        <activity
+            android:name=".ui.ProAudio"
+            android:label="@string/title_activity_pro_audio"
+            android:parentActivityName=".ui.CreateTone"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bomba.com.mobiads.bamba.ui.CreateTone" />
+        </activity>
+        <activity
+            android:name=".ui.MyTone"
+            android:label="@string/title_activity_my_tone"
+            android:parentActivityName=".ui.CreateTone"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bomba.com.mobiads.bamba.ui.CreateTone" />
+        </activity>
+        <activity
+            android:name=".ui.Library"
+            android:label="@string/title_activity_library"
+            android:parentActivityName=".Home"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bomba.com.mobiads.bamba.Home" />
+        </activity>
+        <activity
+            android:name=".ui.RecordActivity"
+            android:label="Record Audio"
+            android:parentActivityName=".Home"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Home" />
+        </activity>
+        <activity
+            android:name=".ui.FullRecordActivity"
+            android:label="Record Audio"
+            android:parentActivityName=".Home"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Home" />
+        </activity>
+
+        <activity
+            android:name=".adapter.MiniPlayerActivity"
+            android:label="Play Audio"
+            android:parentActivityName=".Home"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransparentActivity"/>
+    </application>
+
+</manifest>

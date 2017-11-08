@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Bamba</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="record_text">Record an audio</string>
+    <string name="choose_text">Pick from music</string>
+
+    <string name="title_activity_signin">Bamba</string>
+    <string name="title_activity_create_tone">Create Tune</string>
+    <string-array name="create_tone_list_titles">
+        <item>Your Own</item>
+        <item>For Someone</item>
+        <item>Request pro</item>
+    </string-array>
+    <string-array name="create_tone_list_values">
+        <item>own</item>
+        <item>someone</item>
+        <item>pro</item>
+    </string-array>
+
+    <string-array name="tone_actions_titles">
+        <item>Play</item>
+        <item>Submit</item>
+        <item>Delete</item>
+    </string-array>
+
+
+    <string name="title_activity_tune_details">TuneDetails</string>
+    <string name="title_activity_create_account">CreateAccount</string>
+    <string name="title_activity_pay">Pay</string>
+    <string name="title_activity_register_business">RegisterBusiness</string>
+    <string name="title_activity_pro_audio">ProAudio</string>
+    <string name="title_activity_my_tone">MyTone</string>
+    <string name="title_activity_library">Library</string>
+</resources>

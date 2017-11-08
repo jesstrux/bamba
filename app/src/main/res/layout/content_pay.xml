@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_pay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="mobiads.com.bomba.ui.Pay"
+    tools:showIn="@layout/activity_pay"
+    android:theme="@style/MyLoginTheme">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorMyTone"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:text="Number of Months"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="@color/colorWhite" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/no_months"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:textSize="@dimen/_12ssp"
+            tools:text="1"
+            app:ms_background_color="@color/colorWhite"
+            app:ms_arrow_tint="@color/bald"
+            app:ms_text_color="@color/bald"
+            android:textColor="@color/bald"/>
+
+
+
+        <android.support.v7.widget.CardView android:id="@+id/card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="#fff"
+            app:cardCornerRadius="2dp"
+            android:elevation="1dp"
+            app:cardPreventCornerOverlap="false"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginLeft="@dimen/_16sdp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Amount"
+                    android:textSize="@dimen/_14ssp"
+                    android:paddingLeft="@dimen/_16sdp"
+                    android:paddingTop="@dimen/_16sdp"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5,000.00 Tsh"
+                    android:textSize="@dimen/_22ssp"
+                    android:paddingLeft="@dimen/_16sdp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorDarkGrey"
+                    android:paddingTop="@dimen/_16sdp"
+                    android:paddingBottom="@dimen/_16sdp"/>
+
+            </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:text="Transaction Details"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"/>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@mipmap/phone_icon"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/_16sdp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+255 768 616776"
+                android:textColor="@color/colorWhite"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:textSize="@dimen/_12ssp"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:text="Payment Method"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"/>
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/payment_method"
+            android:layout_width="@dimen/_150sdp"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:textSize="@dimen/_12ssp"
+            tools:text="Mpesa"
+            app:ms_background_color="@color/colorWhite"
+            app:ms_arrow_tint="@color/bald"
+            app:ms_text_color="@color/bald"
+            android:textColor="@color/bald"/>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:background="@drawable/create_tune_btn"
+            android:layout_margin="@dimen/_16sdp"
+            android:text="check out"
+            android:textColor="@color/colorMyTone"/>
+
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

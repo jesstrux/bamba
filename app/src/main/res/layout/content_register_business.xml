@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_register_business"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="mobiads.com.bomba.ui.RegisterBusiness"
+    tools:showIn="@layout/activity_register_business"
+    android:theme="@style/CreateToneTheme">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:orientation="vertical">
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:textColorHint="#000">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#000"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:hint="Business Name"
+                android:inputType="text"
+                android:paddingBottom="20dp"
+                android:paddingRight="20dp"
+                android:textColor="#000"
+                android:textColorHint="@color/bald"
+                android:textSize="@dimen/_12sdp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:textColorHint="#000">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#000"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:hint="Telephone"
+                android:inputType="phone"
+                android:paddingBottom="20dp"
+                android:paddingRight="20dp"
+                android:textColor="#000"
+                android:textColorHint="@color/bald"
+                android:textSize="@dimen/_12sdp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:text="Business Type"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="@color/colorBlack"
+            android:layout_marginBottom="@dimen/_8sdp"/>
+
+
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_16sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                tools:text="Spinner"
+                app:ms_background_color="@color/colorRed"
+                app:ms_arrow_tint="@color/colorWhite"
+                app:ms_text_color="@color/colorWhite"
+                android:textColor="@color/colorWhite"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:textColorHint="#000">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#000"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:hint="Location"
+                android:inputType="text"
+                android:paddingBottom="20dp"
+                android:paddingRight="20dp"
+                android:textColor="#000"
+                android:textColorHint="@color/bald"
+                android:textSize="@dimen/_12sdp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:textColorHint="#000">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#000"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:hint="Number of Stuff"
+                android:inputType="number"
+                android:paddingBottom="20dp"
+                android:paddingRight="20dp"
+                android:textColor="#000"
+                android:textColorHint="@color/bald"
+                android:textSize="@dimen/_12sdp" />
+
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+
+
+
+    <Button android:id="@+id/upgrade_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38sdp"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginRight="@dimen/_16sdp"
+        android:text="upgrade now"
+        android:textSize="@dimen/_14ssp"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/red_btn"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_24sdp"/>
+
+</RelativeLayout>

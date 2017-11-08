@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPurple"/>
+
+
+    <ImageView android:id="@+id/mask_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:src="@drawable/signin_bg"
+        android:scaleType="centerCrop"
+        android:alpha="0.3"/>
+
+
+    <Button android:id="@+id/tone_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38sdp"
+        android:text="create tune"
+        android:textColor="@color/colorPurple"
+        android:background="@drawable/create_tune_btn"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginRight="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_50sdp"/>
+
+
+    <Button android:id="@+id/library_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38sdp"
+        android:text="library"
+        android:textColor="@color/colorPurple"
+        android:background="@drawable/create_tune_btn"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginRight="@dimen/_16sdp"
+        android:layout_below="@id/tone_btn"
+        android:layout_marginTop="@dimen/_16sdp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/library_btn"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:text="Recent tunes"
+            android:textSize="@dimen/_16ssp"
+            android:textColor="@color/colorWhite"/>
+
+        <TextView android:id="@+id/no_tunes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:text="You have no tunes yet"
+            android:textSize="@dimen/_14ssp"
+            android:textColor="@color/colorWhite"
+            android:visibility="gone"/>
+
+        <FrameLayout
+            android:id="@+id/tunesListPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+</RelativeLayout>
