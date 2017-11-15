@@ -56,16 +56,6 @@
             android:textSize="@dimen/_16ssp"
             android:textColor="@color/colorWhite"/>
 
-        <TextView android:id="@+id/no_tunes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:text="You have no tunes yet"
-            android:textSize="@dimen/_14ssp"
-            android:textColor="@color/colorWhite"
-            android:visibility="gone"/>
-
         <FrameLayout
             android:id="@+id/tunesListPlaceholder"
             android:layout_width="match_parent"

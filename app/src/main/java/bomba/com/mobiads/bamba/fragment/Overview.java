@@ -18,6 +18,8 @@ import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -55,6 +57,7 @@ import bomba.com.mobiads.bamba.Constants;
 import bomba.com.mobiads.bamba.Home;
 import bomba.com.mobiads.bamba.MoiUtils;
 import bomba.com.mobiads.bamba.R;
+import bomba.com.mobiads.bamba.TunesList;
 import bomba.com.mobiads.bamba.adapter.BuyTuneAdapter;
 import bomba.com.mobiads.bamba.data.BambaContract;
 import bomba.com.mobiads.bamba.data.BambaDbHelper;
@@ -83,6 +86,7 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
     public static final int PICK_AUDIO = 17;
     final String CHOICE_DIALOG = "choice";
     private final String TONE_NAME = "TONE_NAME";
+    private final String TONE_PHONE = "TONE_PHONE";
     private final String REGISTRATION_DIALOG = "REGISTER_TONE";
     private final String PICKED_TONE_DIALOG = "PICKED_TONE";
     private final String REGISTRATION_COMPLETE_DIALOG = "REGISTRATION_COMPLETE";
@@ -95,6 +99,7 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
     TextView mTitle;
 
     FragmentModalBottomSheet fragmentModalBottomSheet;
+    private boolean mForMe = false;
 
     @OnClick(R.id.tone_btn)
     public void OnTone(){
@@ -130,6 +135,15 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
         Glide.with(getActivity())
                 .load(R.drawable.signin_bg)
                 .into(mImageMask);
+
+//        if(isResumed() && !isRemoving()){
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            TunesList tunesList = TunesList.newInstance(true);
+            fragmentTransaction.replace(R.id.tunesListPlaceholder, tunesList);
+            fragmentTransaction.commit();
+//        }
         return view;
     }
 
@@ -145,10 +159,13 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
                 switch (label) {
                     case "Your Own":
 //                        startActivity(new Intent(getActivity(), MyTone.class));
+                        mForMe = true;
                         showBottomSheetFragment();
                         break;
                     case "For Someone":
-                        Toast.makeText(getActivity(), "Create tone for someone", Toast.LENGTH_SHORT).show();
+                        mForMe = false;
+                        showBottomSheetFragment();
+//                        Toast.makeText(getActivity(), "Create tone for someone", Toast.LENGTH_SHORT).show();
                         break;
                     case "Request pro":
                         startActivity(new Intent(getActivity(), ProAudio.class));
@@ -162,9 +179,15 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
         }
 
         else if (REGISTRATION_DIALOG.equals(dialogTag)){
+            String phone;
+            if(!mForMe)
+                phone = extras.getString(TONE_PHONE);
+            else
+                phone = "0717138056"; /*TODO get from logged in user*/
+
             String name = extras.getString(TONE_NAME);
 
-            if(MoiUtils.persistInfo((AppCompatActivity) getActivity(), name, displayName)){
+            if(MoiUtils.persistInfo((AppCompatActivity) getActivity(), phone, name, displayName)){
                 SimpleDialog.build()
                         .title("Success")
                         .msg("Your tone was successfully saved! \n Tone name: "+name+"\n")
@@ -204,6 +227,9 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
 
     private void recordAudio(){
         Intent intent = new Intent(getActivity(), FullRecordActivity.class);
+
+        if(mForMe)
+            intent.putExtra("userNumber", "0717138056"); /*TODO get from logged in user*/
 //        startActivityForResult(intent, MANUAL_RECORD);
         startActivity(intent);
     }
@@ -262,13 +288,24 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
                 FileUtils.copyFile(chosenFile, new File(mbasepath, displayName));
                 Log.d("WOURA", "File was successfully copied!!");
 
-                SimpleFormDialog.build()
+                if(mForMe)
+                    SimpleFormDialog.build()
                         .title("Save Tone")
                         .fields(
                                 Input.name(TONE_NAME).required().hint("Tone Name")
                         )
                         .pos("SUBMIT")
                         .show(this, REGISTRATION_DIALOG);
+                else
+                    SimpleFormDialog.build()
+                            .title("Save Tone")
+                            .fields(
+                                    Input.phone(TONE_PHONE).required().hint("Phone Number"),
+                                    Input.name(TONE_NAME).required().hint("Tone Name")
+                            )
+                            .pos("SUBMIT")
+                            .show(this, REGISTRATION_DIALOG);
+
             } catch (Exception e) {
                 err = e.getMessage();
                 Log.d("WOURA", "Error copying file!!");

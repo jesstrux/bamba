@@ -1,6 +1,5 @@
 package bomba.com.mobiads.bamba;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bomba.com.mobiads.bamba.adapter.BuyTuneAdapter;
+import bomba.com.mobiads.bamba.adapter.MiniPlayerActivity;
 import bomba.com.mobiads.bamba.data.BambaContract;
 import bomba.com.mobiads.bamba.data.BambaDbHelper;
 import bomba.com.mobiads.bamba.dataset.MyTunes;
-import bomba.com.mobiads.bamba.ui.ProAudio;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import eltos.simpledialogfragment.SimpleDialog;
@@ -70,16 +68,58 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
             mCursor.close();
     }
 
-    private OnFragmentInteractionListener mListener;
+//    private OnFragmentInteractionListener mListener;
 
     public TunesList() {}
 
-    public static TunesList newInstance(String isMain) {
+    public static TunesList newInstance(Boolean isMain) {
         TunesList fragment = new TunesList();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_ISMAIN, isMain);
+        args.putBoolean(ARG_PARAM_ISMAIN, isMain);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private TunesList.DataFetchedCallback dataFetchedCallback;
+
+    public void filterItems(String query) {
+        ArrayList<MyTunes> filterdTunes = new ArrayList<>();
+
+        //looping through existing elements
+        for (MyTunes tune : myTunesArrayList) {
+            //if the existing elements contains the search input
+            String s = tune.getName();
+
+            if (s.toLowerCase().contains(query.toLowerCase())) {
+                //adding the element to filtered list
+                filterdTunes.add(tune);
+            }
+        }
+
+        buyTuneAdapter.filterList(filterdTunes);
+
+        if(filterdTunes.isEmpty()){
+            noTunesTextView.setVisibility(View.VISIBLE);
+            noTunesTextView.setText(Html.fromHtml("No tunes matching: " + "<u><b>"+query+"</b></u>."));
+
+            int paddingPixel = 28;
+            float density = getActivity().getResources().getDisplayMetrics().density;
+            int paddingDp = (int)(paddingPixel * density);
+            noTunesTextView.setPadding(20,paddingDp,20,20);
+        }
+        else{
+            noTunesTextView.setVisibility(View.GONE);
+            noTunesTextView.setText("You have no tunes yet.");
+            noTunesTextView.setPadding(20,0,20,20);
+        }
+    }
+
+    public static interface DataFetchedCallback{
+        void dataFetched(ArrayList<MyTunes> is_empty);
+    }
+
+    public void setDataFetchedCallback(final TunesList.DataFetchedCallback itemClickCallback){
+        this.dataFetchedCallback = itemClickCallback;
     }
 
     @Override
@@ -93,16 +133,14 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = container;
-        mInflater = inflater;
-
         View view = inflater.inflate(R.layout.fragment_tunes_list, container, false);
         ButterKnife.bind(this,view);
-
+        mInflater = inflater;
 
         BambaDbHelper dbhelper = new BambaDbHelper(getActivity());
         database = dbhelper.getReadableDatabase();
         mCursor = queryTones();
+//        noTunesTextView.setText("Hamna tunes kwenye repo.");
 
 //        setData();
         setRealData();
@@ -111,13 +149,14 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
         else
             noTunesTextView.setVisibility(View.VISIBLE);
 
+        if(dataFetchedCallback != null)
+            dataFetchedCallback.dataFetched(myTunesArrayList);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mList.setLayoutManager(layoutManager);
         buyTuneAdapter = new BuyTuneAdapter(getActivity(),myTunesArrayList);
         buyTuneAdapter.setItemClickCallback(this);
         mList.setAdapter(buyTuneAdapter);
-
-        cleanSweep();
 
         return view;
     }
@@ -170,6 +209,7 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
         for (int i = 0; i<4; i++){
             myTunes = new MyTunes(
                     "1",
+                    "0717138056",
                     "French Cuisine",
                     "path",
                     "Pending",
@@ -179,32 +219,32 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
 
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+//    public void onButtonPressed(Uri uri) {
+//        if (mListener != null) {
+//            mListener.onFragmentInteraction(uri);
+//        }
+//    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        mListener = null;
+//    }
+//
+//    public interface OnFragmentInteractionListener {
+//        void onFragmentInteraction(Uri uri);
+//    }
 
     @Override
     public void onItemClick(int p) {
@@ -218,18 +258,7 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
 
     @Override
     public void onItemPlay(int p) {
-        MyTunes tune = myTunesArrayList.get(p);
-        String file_path = tune.getFile_path();
-        String base_path = getActivity().getFilesDir().getPath() + "/" + Constants.AUDIO_RECORDER_FOLDER;
-        File file = new File(base_path, file_path);
-
-        if(file.exists()){
-            Log.d("WOURA", "Audio File found...");
-            playAudio(Uri.fromFile(file));
-        }else{
-            Toast.makeText(getActivity(), "Audio file not found, might've been deleted!", Toast.LENGTH_SHORT).show();
-            Log.d("WOURA", "Audio File not found!!: " + tune.getFile_path());
-        }
+        playAudio(myTunesArrayList.get(p));
     }
 
     private void actionOnTune(String label){
@@ -263,41 +292,14 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
         }
     }
 
-    private void playAudio(Uri uri){
-        AudioWife.getInstance().init(getContext(), uri).useDefaultUi(mRootView, getActivity().getLayoutInflater()).play();
-        Log.d("WOURA", "Playing audio file...");
-//        MediaPlayer player = new MediaPlayer();
-//
-//        try {
-//            player.setDataSource(uri.getPath());
-//
-//            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
-//                @Override
-//                public void onCompletion(MediaPlayer mp) {
-//                    Log.d("WOURA", "onCompletion: Song completed!!");
-//                }
-//            });
-//
-//
-//            player.setOnPreparedListener(
-//                new MediaPlayer.OnPreparedListener() {
-//                    @Override
-//                    public void onPrepared(MediaPlayer mp) {
-//                        Log.d("WOURA", "Song ready to play!!");
-//                        mp.start();
-//                    }
-//                }
-//            );
-//        } catch (Exception e) {
-//            Log.d("WOURA", "Error setting song!!");
-//            Log.d("WOURA", e.getMessage());
-//        }
-//
-//        player.prepareAsync();
-//        Intent intent = new Intent(ctx, AccountInfoActivity.class);
-//        Bundle b = toBundle(mValues.get(getAdapterPosition()));
-//        intent.putExtras(b);
-//        ctx.startActivity(intent);
+    private void playAudio(MyTunes tune){
+        String path = tune.getFile_path();
+        String name = tune.getName();
+
+        Intent intent = new Intent(getContext(), MiniPlayerActivity.class);
+        intent.putExtra("file_path", path);
+        intent.putExtra("file_name", name);
+        startActivity(intent);
     }
 
     @Override

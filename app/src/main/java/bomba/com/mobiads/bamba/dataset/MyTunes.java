@@ -14,13 +14,15 @@ import java.util.Locale;
 public class MyTunes {
 
     String id;
+    String phone;
     String name;
     String status;
     String file_path;
     String created_at;
 
-    public MyTunes(String id, String name, String path, String status, String date_created){
+    public MyTunes(String id, String phone, String name, String path, String status, String date_created){
         this.id = id;
+        this.phone = phone;
         this.name = name;
         this.file_path = path;
         this.status = status;
@@ -36,10 +38,17 @@ public class MyTunes {
 
     public MyTunes (){}
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getId() {
         return id;
     }
-
 
     public void setId(String id) {
         this.id = id;
@@ -84,10 +93,11 @@ public class MyTunes {
     public static MyTunes fromCursor(Cursor cursor) {
         return new MyTunes(
                 String.valueOf(cursor.getInt(0)), //id
-                cursor.getString(1), //name
-                cursor.getString(2), //file_path
-                cursor.getString(3), //status
-                cursor.getString(4) //created_at
+                cursor.getString(1), //phone
+                cursor.getString(2), //name
+                cursor.getString(3), //file_path
+                cursor.getString(4), //status
+                cursor.getString(5) //created_at
         );
     }
 }

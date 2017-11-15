@@ -8,6 +8,9 @@
     <color name="colorWhite">#FFFFFF</color>
 
     <color name="colorBlack">#000000</color>
+    <!--<color name="colorVis">#ea818b</color>-->
+    <color name="colorVis">#fff</color>
+    <color name="transBg">#3000</color>
 
 
     <color name="colorLightGrey">#75706e6e</color>

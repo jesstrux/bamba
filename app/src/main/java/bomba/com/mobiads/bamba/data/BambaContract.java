@@ -33,6 +33,7 @@ public class BambaContract {
         public static final String TABLE_NAME = "bamba_tones";
 
         public static final String COLUMN_ID = "_id";
+        public static final String COLUMN_PHONE = "phone";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_PATH ="file_path";
         public static final String COLUMN_STATUS ="status";
@@ -40,6 +41,7 @@ public class BambaContract {
 
         public static final String[] PROJECTION = {
                 "_ID AS _id",
+                COLUMN_PHONE,
                 COLUMN_NAME,
                 COLUMN_PATH,
                 COLUMN_STATUS,

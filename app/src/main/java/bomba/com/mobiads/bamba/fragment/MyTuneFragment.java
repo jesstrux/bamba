@@ -1,49 +1,28 @@
 package bomba.com.mobiads.bamba.fragment;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
-import bomba.com.mobiads.bamba.Constants;
 import bomba.com.mobiads.bamba.OnBackPressedListener;
 import bomba.com.mobiads.bamba.R;
-import bomba.com.mobiads.bamba.adapter.MyTunesAdapter;
-import bomba.com.mobiads.bamba.data.BambaContract;
-import bomba.com.mobiads.bamba.data.BambaDbHelper;
+import bomba.com.mobiads.bamba.TunesList;
 import bomba.com.mobiads.bamba.dataset.MyTunes;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import nl.changer.audiowife.AudioWife;
 
 
-public class MyTuneFragment extends Fragment implements OnBackPressedListener, MyTunesAdapter.ItemClickCallback {
-
-    @BindView(R.id.list_item)
-    RecyclerView mList;
-
-    @BindView(R.id.no_tunes)
-    TextView noTunesTextView;
+public class MyTuneFragment extends Fragment implements OnBackPressedListener, TunesList.DataFetchedCallback {
 
     @BindView(R.id.openSearchViewBtn)
     ImageButton openSearchViewBtn;
@@ -51,14 +30,8 @@ public class MyTuneFragment extends Fragment implements OnBackPressedListener, M
     @BindView(R.id.search_view)
     MaterialSearchView searchView;
 
-    private SQLiteDatabase database;
-    ArrayList<MyTunes> myTunesArrayList = new ArrayList<>();
-    MyTunesAdapter myTunesAdapter;
-    Cursor mCursor;
-
-    MyTunes myTunes;
     private ViewGroup mRootView;
-
+    private TunesList tunesList;
 
     public static MyTuneFragment newInstance() {
         MyTuneFragment fragment = new MyTuneFragment();
@@ -78,76 +51,50 @@ public class MyTuneFragment extends Fragment implements OnBackPressedListener, M
         mRootView = container;
         ButterKnife.bind(this,view);
 
-        BambaDbHelper dbhelper = new BambaDbHelper(getActivity());
-        database = dbhelper.getReadableDatabase();
-        mCursor = queryTones();
+//        if(isResumed() && !isRemoving()){
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-//        setData();
-        setRealData();
+            tunesList = TunesList.newInstance(true);
+            tunesList.setDataFetchedCallback(this);
+            fragmentTransaction.replace(R.id.myTunesListPlaceholder, tunesList);
+            fragmentTransaction.commit();
+//        }
 
-        if(!myTunesArrayList.isEmpty())
-            noTunesTextView.setVisibility(View.GONE);
-        else
-            noTunesTextView.setVisibility(View.VISIBLE);
+        return view;
+    }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mList.setLayoutManager(layoutManager);
-        myTunesAdapter = new MyTunesAdapter(getActivity(),myTunesArrayList);
-        myTunesAdapter.setItemClickCallback(this);
+    public void dataFetched(ArrayList<MyTunes> tunesList){
+        Log.d("WOURA", "Response from datafetch adapter!" + tunesList.isEmpty());
 
-        mList.setAdapter(myTunesAdapter);
-
-        if(!myTunesArrayList.isEmpty()){
+        if(!tunesList.isEmpty()){
             openSearchViewBtn.setVisibility(View.VISIBLE);
             openSearchViewBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    searchView.showSearch();
+                    setupSearch();
                 }
             });
         }else{
             openSearchViewBtn.setVisibility(View.GONE);
         }
-
-        return view;
     }
 
-    private Cursor queryTones(){
-        return database.query(
-                BambaContract.TonesEntry.TABLE_NAME,
-                BambaContract.TonesEntry.PROJECTION,
-                null, null, null, null, BambaContract.TonesEntry.COLUMN_CREATED_AT + " DESC"
-        );
-    }
+    private void setupSearch(){
+        searchView.showSearch();
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
-    public void setRealData(){
-        myTunesArrayList.clear();
-
-        mCursor.moveToFirst();
-        while(!mCursor.isAfterLast()) {
-            MyTunes tune = MyTunes.fromCursor(mCursor);
-
-//            for(int i = 0; i < 26; i++)
-                myTunesArrayList.add(tune);
-
-            mCursor.moveToNext();
-        }
-    }
-
-
-    public void setData(){
-        myTunesArrayList.clear();
-
-        for(int i = 0; i < 6; i++){
-            myTunes = new MyTunes(
-                    "1",
-                    "French Cuisine",
-                    "path",
-                    "Pending",
-                    "June 3rd");
-            myTunesArrayList.add(myTunes);
-        }
-
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d("WOURA", "Searched string is: " + newText);
+                tunesList.filterItems(newText);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -156,23 +103,6 @@ public class MyTuneFragment extends Fragment implements OnBackPressedListener, M
             searchView.closeSearch();
         }else{
             getActivity().onBackPressed();
-        }
-    }
-
-    @Override
-    public void onItemPlay(int p) {
-        MyTunes tune = myTunesArrayList.get(p);
-        String file_path = tune.getFile_path();
-        String base_path = getActivity().getFilesDir().getPath() + "/" + Constants.AUDIO_RECORDER_FOLDER;
-        File file = new File(base_path, file_path);
-
-        if(file.exists()){
-            Log.d("WOURA", "Audio File found...");
-            AudioWife.getInstance().init(getContext(), Uri.fromFile(file)).useDefaultUi(mRootView, getActivity().getLayoutInflater()).play();
-            Log.d("WOURA", "Playing audio file...");
-        }else{
-            Toast.makeText(getActivity(), "Audio file not found, might've been deleted!", Toast.LENGTH_SHORT).show();
-            Log.d("WOURA", "Audio File not found!!: " + tune.getFile_path());
         }
     }
 }

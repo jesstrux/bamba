@@ -58,6 +58,7 @@ public class MoiUtils {
 
     public static ContentValues prepareValues(MyTunes tune){
         ContentValues acValues = new ContentValues();
+        acValues.put(BambaContract.TonesEntry.COLUMN_PHONE, tune.getPhone());
         acValues.put(BambaContract.TonesEntry.COLUMN_NAME, tune.getName());
         acValues.put(BambaContract.TonesEntry.COLUMN_PATH, tune.getFile_path());
         acValues.put(BambaContract.TonesEntry.COLUMN_STATUS, tune.getStatus());
@@ -66,12 +67,13 @@ public class MoiUtils {
         return acValues;
     }
 
-    public static boolean persistInfo(AppCompatActivity ctx, String name, String file_name){
+    public static boolean persistInfo(AppCompatActivity ctx, String phone, String name, String file_name){
         BambaDbHelper dbhelper = new BambaDbHelper(ctx);
         SQLiteDatabase database = dbhelper.getReadableDatabase();
 
         MyTunes tune = new MyTunes();
         tune.setName(name);
+        tune.setPhone(phone);
         tune.setFile_path(file_name);
         tune.setStatus("pending");
         Date time = new Date();

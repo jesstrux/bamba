@@ -1,9 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="bomba.com.mobiads.bamba.adapter.MiniPlayerActivity">
+    tools:context="bomba.com.mobiads.bamba.adapter.MiniPlayerActivity"
+    android:background="#6000"
+    android:gravity="center"
+    android:fitsSystemWindows="true">
 
-</android.support.constraint.ConstraintLayout>
+    <View
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="closeActivity"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shadow_rounded_bg"
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:clickable="true">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="0dp"
+            android:background="#fafafa"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/audioTitle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:text="The Audio Title"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_clear_search"
+                android:onClick="closeActivity"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/activityWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"/>
+    </LinearLayout>
+</FrameLayout>

@@ -66,11 +66,13 @@ public class FullRecordActivity extends AppCompatActivity implements View.OnClic
     private Handler handler = new Handler(); // Handler for updating the
     private int currentTime = 0;
     private final String TONE_NAME = "TONE_NAME";
+    private final String TONE_PHONE = "TONE_PHONE";
     private final String USER_PHONE = "USER_PHONE";
     private final String REGISTRATION_DIALOG = "REGISTER_TONE";
     private final String REGISTRATION_COMPLETE_DIALOG = "REGISTRATION_COMPLETE";
     private SQLiteDatabase database;
     private boolean unUsedRecordedFile;
+    private String userNumber = null;
 
     //    RECORD
 //    Record button to stop button
@@ -87,9 +89,9 @@ public class FullRecordActivity extends AppCompatActivity implements View.OnClic
             player = null;
         }
 
-        if(mVisualizer != null){
-            mVisualizer.setEnabled(false);
-        }
+//        if(mVisualizer != null){
+//            mVisualizer.setEnabled(false);
+//        }
 
         if(recorder != null){
             unUsedRecordedFile = true;
@@ -134,6 +136,9 @@ public class FullRecordActivity extends AppCompatActivity implements View.OnClic
         mBasePath = getBaseContext().getFilesDir().getPath();
         mVisualizerView = (VisualizerView) findViewById(R.id.myvisualizerview);
         mRecorderVisualizerView = (RecorderVisualizerView) findViewById(R.id.recordVisualizerView);
+        String intentNumber = getIntent().getStringExtra("userNumber");
+        if(intentNumber != null)
+            userNumber = intentNumber;
 
         BambaDbHelper dbhelper = new BambaDbHelper(this);
         database = dbhelper.getWritableDatabase();
@@ -246,14 +251,23 @@ public class FullRecordActivity extends AppCompatActivity implements View.OnClic
             mVisualizer.setEnabled(false);
         }
 
-
-        SimpleFormDialog.build()
-                .title("Save Tone")
-                .fields(
-                        Input.name(TONE_NAME).required().hint("Tone Name")
-                )
-                .pos("SUBMIT")
-                .show(this, REGISTRATION_DIALOG);
+        if(userNumber != null)
+            SimpleFormDialog.build()
+                    .title("Save Tone")
+                    .fields(
+                            Input.name(TONE_NAME).required().hint("Tone Name")
+                    )
+                    .pos("SUBMIT")
+                    .show(this, REGISTRATION_DIALOG);
+        else
+            SimpleFormDialog.build()
+                    .title("Save Tone")
+                    .fields(
+                            Input.phone(TONE_PHONE).required().hint("Phone Number"),
+                            Input.name(TONE_NAME).required().hint("Tone Name")
+                    )
+                    .pos("SUBMIT")
+                    .show(this, REGISTRATION_DIALOG);
     }
 
     private void restartBtnClick(){
@@ -471,12 +485,18 @@ public class FullRecordActivity extends AppCompatActivity implements View.OnClic
 
             unUsedRecordedFile = false;
             String name = extras.getString(TONE_NAME);
-            if(MoiUtils.persistInfo(this, name, file_name)){
+            String number;
+
+            if(userNumber != null)
+                number = userNumber;
+            else
+                number = extras.getString(TONE_PHONE);
+
+            if(MoiUtils.persistInfo(this, number, name, file_name))
                 SimpleDialog.build()
                         .title("Success")
-                        .msg("Your tone was successfully saved! \n Tone name: "+name+"\n" + "\n File path: " + mFullPath)
+                        .msg("Your tone was successfully saved! \nTone name: "+name+"\n")
                         .show(this, REGISTRATION_COMPLETE_DIALOG);
-            }
 
             return true;
         }else if(REGISTRATION_COMPLETE_DIALOG.equals(dialogTag)){

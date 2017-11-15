@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import bomba.com.mobiads.bamba.R;
 import bomba.com.mobiads.bamba.dataset.MyTunes;
+import bomba.com.mobiads.bamba.ui.TuneDetails;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nl.changer.audiowife.AudioWife;
@@ -95,6 +96,15 @@ public class BuyTuneAdapter extends RecyclerView.Adapter<BuyTuneAdapter.ViewHold
             ButterKnife.bind(this,itemView);
 
             mView.setOnClickListener(this);
+            mView.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    itemClickCallback.onItemClick(getAdapterPosition());
+                    return true;
+                }
+            });
+
             mIcon.setOnClickListener(this);
         }
 
@@ -103,7 +113,7 @@ public class BuyTuneAdapter extends RecyclerView.Adapter<BuyTuneAdapter.ViewHold
             if(view.getId() == R.id.tunePlayIcon)
                 itemClickCallback.onItemPlay(getAdapterPosition());
             else
-                itemClickCallback.onItemClick(getAdapterPosition());
+                mContext.startActivity(new Intent(mContext, TuneDetails.class));
 //            Context ctx = v.getContext();
         }
     }
@@ -119,5 +129,10 @@ public class BuyTuneAdapter extends RecyclerView.Adapter<BuyTuneAdapter.ViewHold
                     .setDuration(700)
                     .start();
         }
+    }
+
+    public void filterList(ArrayList<MyTunes> filteredTunes) {
+        this.mValue = filteredTunes;
+        notifyDataSetChanged();
     }
 }

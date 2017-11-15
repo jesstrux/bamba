@@ -57,14 +57,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#ea818b"/>
+            android:background="@color/colorVis"/>
 
         <bomba.com.mobiads.bamba.ui.RecorderVisualizerView
             android:id="@+id/recordVisualizerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#ea818b"/>
+            android:background="@color/colorVis"/>
     </LinearLayout>
 
     <LinearLayout
