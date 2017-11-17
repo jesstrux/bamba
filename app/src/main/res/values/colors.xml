@@ -6,6 +6,7 @@
     <color name="colorPurple">#5E2750</color>
     <color name="colorRed">#E60000</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorLightWhite">#FFF9F0F0</color>
 
     <color name="colorBlack">#000000</color>
     <!--<color name="colorVis">#ea818b</color>-->

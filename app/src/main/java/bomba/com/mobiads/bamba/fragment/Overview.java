@@ -1,20 +1,15 @@
 package bomba.com.mobiads.bamba.fragment;
 
 import android.Manifest;
-import android.content.ContentValues;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.media.MediaPlayer;
-import android.net.Uri;
+import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,9 +17,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 //import android.view.LayoutInflater;
 import android.view.LayoutInflater;
@@ -35,51 +27,42 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.github.angads25.filepicker.controller.DialogSelectionListener;
+import com.github.angads25.filepicker.model.DialogConfigs;
+import com.github.angads25.filepicker.model.DialogProperties;
+import com.github.angads25.filepicker.view.FilePickerDialog;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import org.apache.commons.io.FileUtils;
-import org.w3c.dom.Text;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
-import java.util.zip.Inflater;
 
 import bomba.com.mobiads.bamba.Constants;
 import bomba.com.mobiads.bamba.Home;
 import bomba.com.mobiads.bamba.MoiUtils;
 import bomba.com.mobiads.bamba.R;
 import bomba.com.mobiads.bamba.TunesList;
-import bomba.com.mobiads.bamba.adapter.BuyTuneAdapter;
-import bomba.com.mobiads.bamba.data.BambaContract;
-import bomba.com.mobiads.bamba.data.BambaDbHelper;
-import bomba.com.mobiads.bamba.dataset.MyTunes;
 import bomba.com.mobiads.bamba.ui.FullRecordActivity;
 import bomba.com.mobiads.bamba.ui.ProAudio;
-import bomba.com.mobiads.bamba.ui.RecordActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
 import eltos.simpledialogfragment.SimpleDialog;
 import eltos.simpledialogfragment.form.Input;
 import eltos.simpledialogfragment.form.SimpleFormDialog;
 import eltos.simpledialogfragment.list.SimpleListDialog;
-import nl.changer.audiowife.AudioWife;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
 import static bomba.com.mobiads.bamba.BaseActivity.Lato_Bold;
 
 
-public class Overview extends Fragment implements SimpleDialog.OnDialogResultListener{
+public class Overview extends Fragment implements SimpleDialog.OnDialogResultListener, TunesList.TunesObserver{
 
     private static final int CREATE_MY_AUDIO = 73;
     private static final int MANUAL_RECORD = 74;
@@ -91,6 +74,23 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
     private final String PICKED_TONE_DIALOG = "PICKED_TONE";
     private final String REGISTRATION_COMPLETE_DIALOG = "REGISTRATION_COMPLETE";
     String displayName = null;
+    public static int ACTION_ADD_TUNE = 1;
+    public static int ACTION_REMOVE_TUNE = 2;
+    TunesList tunesList;
+
+    private long addedId;
+    TunesWatcher tunesWatcher;
+    private ArrayList<String> filePaths;
+
+    public interface TunesWatcher {
+        void tunesChanged(int action, long id);
+    }
+
+    @Override
+    public void tuneDeleted(String id) {
+        Log.d("WOURA", "A tune with id: " + id + "was deleted in overview!");
+        tunesWatcher.tunesChanged(Overview.ACTION_REMOVE_TUNE, Long.parseLong(id));
+    }
 
     @BindView(R.id.mask_img)
     ImageView mImageMask;
@@ -140,11 +140,35 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            TunesList tunesList = TunesList.newInstance(true);
+            tunesList = TunesList.newInstance(true);
             fragmentTransaction.replace(R.id.tunesListPlaceholder, tunesList);
             fragmentTransaction.commit();
+            tunesList.setTunesObserver(this);
 //        }
+
+
+        ((Home) getActivity()).initiateOverviewTunesBroadCast(new Home.OverviewTunesBroadCast() {
+            @Override
+            public void tunesChanged(int action, long id) {
+                if(action == Overview.ACTION_REMOVE_TUNE){
+//                    Toast.makeText(getActivity(), "Remove tune in Overview from broadCast!", Toast.LENGTH_SHORT).show();
+                    tunesList.removeTone(Long.toString(id));
+                }
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            tunesWatcher = (TunesWatcher) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Error in retrieving data. Please try again");
+        }
     }
 
     @Override
@@ -179,6 +203,16 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
         }
 
         else if (REGISTRATION_DIALOG.equals(dialogTag)){
+            if(which == SimpleDialog.OnDialogResultListener.CANCELED){
+                String basepath = getActivity().getFilesDir().getPath() + "/" + Constants.AUDIO_RECORDER_FOLDER;
+                File file = new File(basepath, displayName);
+                if(file.delete())
+                    Log.d("WOURA", "Unused picked file deleted!!");
+
+                Toast.makeText(getActivity(), "You cancelled, tune not sasved.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
             String phone;
             if(!mForMe)
                 phone = extras.getString(TONE_PHONE);
@@ -186,14 +220,21 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
                 phone = "0717138056"; /*TODO get from logged in user*/
 
             String name = extras.getString(TONE_NAME);
-
-            if(MoiUtils.persistInfo((AppCompatActivity) getActivity(), phone, name, displayName)){
+            addedId = MoiUtils.persistInfo((AppCompatActivity) getActivity(), phone, name, displayName);
+            if(addedId != -1){
                 SimpleDialog.build()
                         .title("Success")
                         .msg("Your tone was successfully saved! \n Tone name: "+name+"\n")
                         .show(this, REGISTRATION_COMPLETE_DIALOG);
             }
 
+            return true;
+        }
+
+        //UPDATE TUNE LISTS IN OVEVRVIEW AND TUNE LIST FRAGMENTS
+        else if (REGISTRATION_COMPLETE_DIALOG.equals(dialogTag)){
+            tunesList.newTone(addedId);
+            tunesWatcher.tunesChanged(ACTION_ADD_TUNE, addedId);
             return true;
         }
 
@@ -217,7 +258,7 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
                     .setPositiveButton("Okay",  new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 93);
                         }
                     })
                     .setCancelable(false)
@@ -235,17 +276,114 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
     }
 
     private void pickAudio(){
-        new MaterialFilePicker()
-                .withSupportFragment(this)
-                .withRequestCode(PICK_AUDIO)
-                .withFilter(Pattern.compile(".*\\.mp3$"))
-                .withHiddenFiles(false)
-                .start();
+//        DialogProperties properties = new DialogProperties();
+//        properties.selection_mode = DialogConfigs.SINGLE_MODE;
+//        properties.selection_type = DialogConfigs.FILE_SELECT;
+//        properties.root = new File(DialogConfigs.DEFAULT_DIR);
+//        properties.error_dir = new File(DialogConfigs.DEFAULT_DIR);
+//        properties.extensions = new String[]{"mp3"};
+//        properties.offset = new File("/mnt/");
+//        FilePickerDialog dialog = new FilePickerDialog(getActivity(),properties);
+//        dialog.setTitle("Select Tone");
+//
+//        dialog.setDialogSelectionListener(new DialogSelectionListener() {
+//            @Override
+//            public void onSelectedFilePaths(String[] files) {
+//                handlePickedFile(files[0]);
+//            }
+//        });
+//
+//        dialog.show();
+//        new MaterialFilePicker()
+//                .withSupportFragment(this)
+//                .withRequestCode(PICK_AUDIO)
+//                .withFilter(Pattern.compile(".*\\.mp3$"))
+//                .withPath("/mnt/")
+//                .withHiddenFiles(false)
+//                .start();
+
+        FilePickerBuilder.getInstance().setMaxCount(10)
+                .setSelectedFiles(filePaths)
+//                .setActivityTheme(R.style.AppTheme)
+                .addFileSupport("MUSIC", new String[]{".mp3"})
+                .pickFile(this);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    private boolean isThirtySeconds(String filePath){
+        boolean b = false;
+        MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+        metaRetriever.setDataSource(filePath);
+
+        String out = "";
+        // get mp3 info
+
+        // convert duration to minute:seconds
+        String duration =
+                metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        Log.v("time", duration);
+        long dur = Long.parseLong(duration);
+        int seconds = Integer.parseInt(String.valueOf((dur % 60000) / 1000));
+
+        Log.v("WOURA", "File duration is: " + seconds);
+        return seconds <= 30;
+    }
+
+    private void handlePickedFile(String filePath){
+        Log.d("WOURA", "Chosen File path" + filePath);
+        File chosenFile = new File(filePath);
+        displayName = chosenFile.getName();
+        String err = null;
+
+        Log.d("WOURA", "Chosen File exists: " + chosenFile.exists() + ", it's name is: " + displayName);
+
+        if(!isThirtySeconds(filePath)){
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Tune too long!!")
+                    .setMessage("Your tune needs to be 30 seconds or less.")
+                    .setPositiveButton("Okay",  null)
+                    .setCancelable(false)
+                    .show();
+//            Toast.makeText("File is too long, should be 30 seconds or less.");
+            return;
+        }
+        try {
+            String mbasepath = getActivity().getFilesDir().getPath() + "/" + Constants.AUDIO_RECORDER_FOLDER;
+            FileUtils.copyFile(chosenFile, new File(mbasepath, displayName));
+            Log.d("WOURA", "File was successfully copied!!");
+
+            if(mForMe)
+                SimpleFormDialog.build()
+                        .title("Save Tone")
+                        .fields(
+                                Input.name(TONE_NAME).required().hint("Tone Name")
+                        )
+                        .pos("SUBMIT")
+                        .show(this, REGISTRATION_DIALOG);
+            else
+                SimpleFormDialog.build()
+                        .title("Save Tone")
+                        .fields(
+                                Input.phone(TONE_PHONE).required().hint("Phone Number"),
+                                Input.name(TONE_NAME).required().hint("Tone Name")
+                        )
+                        .pos("SUBMIT")
+                        .show(this, REGISTRATION_DIALOG);
+
+        } catch (Exception e) {
+            err = e.getMessage();
+            Log.d("WOURA", "Error copying file!!");
+            Log.d("WOURA", "\nError: " + e.getMessage()+"\n");
+
+            Toast.makeText(getActivity(), "Sorry, we couldn't copy your tune.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        String s = String.format(Locale.getDefault(), "Persmission results, request code is: %d was granted: %s", requestCode, grantResults[0] == PackageManager.PERMISSION_GRANTED);
+        Log.d("WOURA", "\n\nThere was a result from permission.\n\n");
+        Log.d("WOURA", s);
+        if (requestCode == 93 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             pickAudio();
         } else {
             final AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -255,7 +393,7 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
                     .setPositiveButton("Okay",  new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                         }
                     })
                     .setNegativeButton("Cancel", null)
@@ -275,9 +413,18 @@ public class Overview extends Fragment implements SimpleDialog.OnDialogResultLis
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Overview.PICK_AUDIO && resultCode == RESULT_OK) {
+        if(requestCode == FilePickerConst.REQUEST_CODE_DOC){
+            if(resultCode== RESULT_OK && data!=null)
+            {
+                filePaths = new ArrayList<>();
+                filePaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+                Log.d("WOURA", "Selected filepath is: " + filePaths.get(0));
+                handlePickedFile(filePaths.get(0));
+            }
+        }
+        else if (requestCode == Overview.PICK_AUDIO && resultCode == RESULT_OK) {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
-            Toast.makeText(getActivity(), "Chosen File path" + filePath, Toast.LENGTH_SHORT).show();
+            Log.d("WOURA", "Chosen File path" + filePath);
             File chosenFile = new File(filePath);
             displayName = chosenFile.getName();
             String err = null;

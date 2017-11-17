@@ -492,7 +492,7 @@ public class FullRecordActivity extends AppCompatActivity implements View.OnClic
             else
                 number = extras.getString(TONE_PHONE);
 
-            if(MoiUtils.persistInfo(this, number, name, file_name))
+            if(MoiUtils.persistInfo(this, number, name, file_name) != -1)
                 SimpleDialog.build()
                         .title("Success")
                         .msg("Your tone was successfully saved! \nTone name: "+name+"\n")
@@ -502,6 +502,7 @@ public class FullRecordActivity extends AppCompatActivity implements View.OnClic
         }else if(REGISTRATION_COMPLETE_DIALOG.equals(dialogTag)){
             setRecorderState(STATE_INIT);
             startActivity(new Intent(this, Home.class));
+            finish();
 //            returnResult();
         }
         return false;

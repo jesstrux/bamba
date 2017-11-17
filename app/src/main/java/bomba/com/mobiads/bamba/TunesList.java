@@ -26,12 +26,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import bomba.com.mobiads.bamba.adapter.BuyTuneAdapter;
 import bomba.com.mobiads.bamba.adapter.MiniPlayerActivity;
 import bomba.com.mobiads.bamba.data.BambaContract;
 import bomba.com.mobiads.bamba.data.BambaDbHelper;
 import bomba.com.mobiads.bamba.dataset.MyTunes;
+import bomba.com.mobiads.bamba.fragment.Overview;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import eltos.simpledialogfragment.SimpleDialog;
@@ -81,6 +83,7 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
     }
 
     private TunesList.DataFetchedCallback dataFetchedCallback;
+    private TunesList.TunesObserver tunesObserver;
 
     public void filterItems(String query) {
         ArrayList<MyTunes> filterdTunes = new ArrayList<>();
@@ -120,6 +123,14 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
 
     public void setDataFetchedCallback(final TunesList.DataFetchedCallback itemClickCallback){
         this.dataFetchedCallback = itemClickCallback;
+    }
+
+    public static interface TunesObserver{
+        void tuneDeleted(String id);
+    }
+
+    public void setTunesObserver(final TunesList.TunesObserver observer){
+        this.tunesObserver = observer;
     }
 
     @Override
@@ -192,6 +203,50 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
         );
     }
 
+    public void newTone(long id){
+        myTunesArrayList.add(0, getTune(String.valueOf(id)));
+        buyTuneAdapter.notifyDataSetChanged();
+
+        noTunesTextView.setVisibility(View.GONE);
+    }
+
+    public MyTunes getTune(String id) {
+        Cursor cursor = null;
+        MyTunes tune = new MyTunes();
+        try {
+            cursor = database.rawQuery(
+                    "SELECT * FROM "+ BambaContract.TonesEntry.TABLE_NAME +" WHERE " + BambaContract.TonesEntry._ID + "="+id,
+                    null);
+            if(cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                tune = MyTunes.fromCursor(cursor);
+                Log.d("WOURA", "One tune found!" + tune.getName());
+            }else{
+                Log.d("WOURA", "No tune found!");
+            }
+            return tune;
+        }finally {
+            cursor.close();
+        }
+    }
+
+    public void removeTone(String id){
+        for (MyTunes tune : myTunesArrayList) {
+            String tuneId = tune.getId();
+
+            if (tuneId.equals(id)) {
+                myTunesArrayList.remove(tune);
+                buyTuneAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+
+        if(!myTunesArrayList.isEmpty())
+            noTunesTextView.setVisibility(View.GONE);
+        else
+            noTunesTextView.setVisibility(View.VISIBLE);
+    }
+
     public void setRealData(){
         myTunesArrayList.clear();
 
@@ -213,6 +268,7 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
                     "French Cuisine",
                     "path",
                     "Pending",
+                    "Some description",
                     "June 3rd");
             myTunesArrayList.add(myTunes);
         }
@@ -281,7 +337,11 @@ public class TunesList extends Fragment implements SimpleDialog.OnDialogResultLi
                                 boolean tune_deletion = MoiUtils.deleteTune((AppCompatActivity) getActivity(), tune.getId());
                                 if(tune_deletion){
                                     Toast.makeText(getActivity(), tune.getName() + " deleted!", Toast.LENGTH_SHORT).show();
+                                    myTunesArrayList.remove(mClickedPosition);
                                     buyTuneAdapter.notifyDataSetChanged();
+
+                                    if(tunesObserver != null)
+                                        tunesObserver.tuneDeleted(tune.getId());
                                 }
                             }
                         })

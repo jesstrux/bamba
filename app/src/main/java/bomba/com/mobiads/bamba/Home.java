@@ -25,19 +25,29 @@ import bomba.com.mobiads.bamba.fragment.MyAccount;
 import bomba.com.mobiads.bamba.fragment.MyTuneFragment;
 import bomba.com.mobiads.bamba.fragment.Overview;
 
-public class Home extends BaseActivity {
+public class Home extends BaseActivity implements Overview.TunesWatcher, MyTuneFragment.TunesWatcher{
 
     public TabLayout tabLayout;
     public static ViewPager viewPager;
     private Overview overviewFragment;
+    private MyTuneFragment myTuneFragment;
+    private MyAccount myAccountFragment;
 //    private Overview overviewFragment;
+
+    TunesBroadCast tunesBroadCast;
+    public interface TunesBroadCast {
+        void tunesChanged(int action, long id);
+    }
+
+    OverviewTunesBroadCast overviewTunesBroadCast;
+    public interface OverviewTunesBroadCast {
+        void tunesChanged(int action, long id);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-
 //        setupTypeface(this);
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
@@ -84,6 +94,19 @@ public class Home extends BaseActivity {
         });
 
 
+    }
+
+    public void initiateTuneBroadCast(TunesBroadCast br) {
+        this.tunesBroadCast = br;
+    }
+    public void initiateOverviewTunesBroadCast(OverviewTunesBroadCast br) {
+        this.overviewTunesBroadCast = br;
+    }
+
+    @Override
+    public void tunesChanged(int action, long id) {
+        tunesBroadCast.tunesChanged(action, id);
+        overviewTunesBroadCast.tunesChanged(action, id);
     }
 
     private void setStautsColor(int color){
@@ -133,11 +156,13 @@ public class Home extends BaseActivity {
 
     }
 
-
     public void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        overviewFragment = new Overview();
-        adapter.addFragment(overviewFragment, "OVERVIEW", "0");
+//        overviewFragment = new Overview();
+//        myTuneFragment = new MyTuneFragment();
+//        myAccountFragment = new MyAccount();
+
+        adapter.addFragment(new Overview(), "OVERVIEW", "0");
         adapter.addFragment(new MyTuneFragment(), "TONES", "1");
         adapter.addFragment(new MyAccount(), "ACCOUNT","2");
         viewPager.setAdapter(adapter);

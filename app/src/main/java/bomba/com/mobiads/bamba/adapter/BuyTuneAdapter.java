@@ -112,17 +112,22 @@ public class BuyTuneAdapter extends RecyclerView.Adapter<BuyTuneAdapter.ViewHold
         public void onClick(View view) {
             if(view.getId() == R.id.tunePlayIcon)
                 itemClickCallback.onItemPlay(getAdapterPosition());
-            else
-                mContext.startActivity(new Intent(mContext, TuneDetails.class));
+            else{
+                Intent intent = new Intent(mContext, TuneDetails.class);
+                MyTunes tune = mValue.get(getAdapterPosition());
+                Bundle b = tune.toBundle();
+                intent.putExtras(b);
+                mContext.startActivity(intent);
+            }
 //            Context ctx = v.getContext();
         }
     }
 
     //Animate view after its attached to window
     private void animateView(View view, int position){
-        if(position > lastAnimatedPosition){
+        if(position < lastAnimatedPosition){
             lastAnimatedPosition = position;
-            view.setTranslationY(300);
+            view.setTranslationY(-300);
             view.animate()
                     .translationY(0.0f)
                     .setInterpolator(new DecelerateInterpolator(3.0f))

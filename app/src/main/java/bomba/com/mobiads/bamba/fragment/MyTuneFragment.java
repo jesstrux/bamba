@@ -1,5 +1,6 @@
 package bomba.com.mobiads.bamba.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 
+import bomba.com.mobiads.bamba.Home;
 import bomba.com.mobiads.bamba.OnBackPressedListener;
 import bomba.com.mobiads.bamba.R;
 import bomba.com.mobiads.bamba.TunesList;
@@ -22,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MyTuneFragment extends Fragment implements OnBackPressedListener, TunesList.DataFetchedCallback {
+public class MyTuneFragment extends Fragment implements OnBackPressedListener, TunesList.DataFetchedCallback, TunesList.TunesObserver {
 
     @BindView(R.id.openSearchViewBtn)
     ImageButton openSearchViewBtn;
@@ -32,6 +35,18 @@ public class MyTuneFragment extends Fragment implements OnBackPressedListener, T
 
     private ViewGroup mRootView;
     private TunesList tunesList;
+
+    TunesWatcher tunesWatcher;
+
+    @Override
+    public void tuneDeleted(String id) {
+        Log.d("WOURA", "A tune with id: " + id + "was deleted in MyTunes!");
+        tunesWatcher.tunesChanged(Overview.ACTION_REMOVE_TUNE, Long.parseLong(id));
+    }
+
+    public interface TunesWatcher {
+        void tunesChanged(int action, long id);
+    }
 
     public static MyTuneFragment newInstance() {
         MyTuneFragment fragment = new MyTuneFragment();
@@ -57,11 +72,38 @@ public class MyTuneFragment extends Fragment implements OnBackPressedListener, T
 
             tunesList = TunesList.newInstance(true);
             tunesList.setDataFetchedCallback(this);
+            tunesList.setTunesObserver(this);
             fragmentTransaction.replace(R.id.myTunesListPlaceholder, tunesList);
             fragmentTransaction.commit();
 //        }
 
+        ((Home) getActivity()).initiateTuneBroadCast(new Home.TunesBroadCast() {
+            @Override
+            public void tunesChanged(int action, long id) {
+                if(action == Overview.ACTION_ADD_TUNE){
+                    Log.d("WOURA", "A new tune was created in MyTunes from broadcast!");
+                    tunesList.newTone(id);
+                }
+                else if(action == Overview.ACTION_REMOVE_TUNE){
+                    Log.d("WOURA", "Remove tune in MyTunes from broadcast!");
+                    tunesList.removeTone(Long.toString(id));
+                }
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            tunesWatcher = (TunesWatcher) getActivity();
+        } catch (Exception e) {
+            Log.d("WOURA", "Error setting up watcher: " + e.getMessage());
+            throw new ClassCastException("Error in retrieving data. Please try again");
+        }
     }
 
     public void dataFetched(ArrayList<MyTunes> tunesList){

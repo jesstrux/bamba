@@ -62,12 +62,13 @@ public class MoiUtils {
         acValues.put(BambaContract.TonesEntry.COLUMN_NAME, tune.getName());
         acValues.put(BambaContract.TonesEntry.COLUMN_PATH, tune.getFile_path());
         acValues.put(BambaContract.TonesEntry.COLUMN_STATUS, tune.getStatus());
+        acValues.put(BambaContract.TonesEntry.COLUMN_DESCRIPTION, tune.getDescription());
         acValues.put(BambaContract.TonesEntry.COLUMN_CREATED_AT, tune.getCreated_at());
 
         return acValues;
     }
 
-    public static boolean persistInfo(AppCompatActivity ctx, String phone, String name, String file_name){
+    public static long persistInfo(AppCompatActivity ctx, String phone, String name, String file_name){
         BambaDbHelper dbhelper = new BambaDbHelper(ctx);
         SQLiteDatabase database = dbhelper.getReadableDatabase();
 
@@ -77,6 +78,7 @@ public class MoiUtils {
         tune.setFile_path(file_name);
         tune.setStatus("pending");
         Date time = new Date();
+        tune.setDescription(name + " was made on: " + String.valueOf(time.getTime()));
         tune.setCreated_at(String.valueOf(time.getTime()));
 
         ContentValues acValues = prepareValues(tune);
@@ -86,12 +88,12 @@ public class MoiUtils {
         if(newToneId != -1){
             Toast.makeText(ctx, "TUNE SAVED", Toast.LENGTH_SHORT).show();
             Log.i("WOURA", "TUNE SAVED");
-            return true;
         }else{
             Toast.makeText(ctx, "TUNE SAVING FAILED", Toast.LENGTH_SHORT).show();
             Log.i("WOURA", "FAILED TO SAVE TUNE");
-            return false;
         }
+
+        return newToneId;
     }
 
     public static boolean deleteTune(AppCompatActivity ctx, String id){

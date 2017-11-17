@@ -1,180 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_tune_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="mobiads.com.bomba.ui.TuneDetails"
+    tools:context=".ui.TuneDetails"
     tools:showIn="@layout/activity_tune_details">
 
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/colorRed"/>-->
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorRed"/>
-
-    <LinearLayout android:id="@+id/layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="@dimen/_28sdp"
-            android:layout_height="@dimen/_28sdp"
-            android:src="@drawable/play_red"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/_16sdp"/>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mangi Supermarket"
-            android:textColor="@color/colorWhite"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_gravity="center"
-            android:textSize="@dimen/_22ssp"/>
-
-    </LinearLayout>
-
-    <LinearLayout android:id="@+id/layout1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:orientation="vertical"
-        android:layout_below="@id/layout">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:textColor="@color/colorWhite"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:textSize="@dimen/_14ssp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat"
-            android:textColor="@color/colorWhite"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:textSize="@dimen/_12ssp"/>
-
-        <View
+        <LinearLayout android:id="@+id/layout"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:background="@color/colorWhite"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_marginRight="@dimen/_16sdp"/>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number subscribed to a tune"
-            android:textColor="@color/colorWhite"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:textSize="@dimen/_14ssp"/>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_28sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:orientation="horizontal">
+            android:layout_height="@dimen/_50sdp"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginBottom="@dimen/_8sdp">
 
             <ImageView
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:src="@mipmap/phone_icon"
+                android:id="@+id/playButton"
+                android:onClick="playAudio"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:src="@drawable/play_red"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_16sdp"/>
 
             <TextView
+                android:id="@+id/audioTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+255 768 416756"
+                android:text="No title found"
                 android:textColor="@color/colorWhite"
                 android:layout_marginLeft="@dimen/_16sdp"
-                android:textSize="@dimen/_12ssp"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:textSize="@dimen/_22ssp"/>
 
         </LinearLayout>
 
-        <LinearLayout
+        <LinearLayout android:id="@+id/layout1"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_28sdp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:src="@mipmap/phone_icon"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/_16sdp"/>
+            android:orientation="vertical"
+            android:layout_below="@id/layout">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+255 755 327756"
+                android:text="Description"
                 android:textColor="@color/colorWhite"
                 android:layout_marginLeft="@dimen/_16sdp"
+                android:textSize="@dimen/_14ssp"/>
+
+            <TextView
+                android:id="@+id/audioDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No description provided."
+                android:textColor="@color/colorWhite"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_12sdp"
+                android:textSize="@dimen/_12ssp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@color/colorWhite"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_16sdp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subscribed numbers"
+                android:textColor="@color/colorWhite"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:textSize="@dimen/_14ssp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No numbers susbscribed to this tune."
+                android:textColor="@color/colorLightWhite"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_6sdp"
                 android:textSize="@dimen/_12ssp"
                 android:layout_gravity="center"/>
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@mipmap/phone_icon"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/_16sdp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+255 768 416756"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginLeft="@dimen/_16sdp"
+                    android:textSize="@dimen/_12ssp"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_38sdp"
+                android:background="@drawable/create_tune_btn"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:text="add number"
+                android:textColor="@color/colorRed"
+                android:textSize="@dimen/_14ssp"
+                android:layout_marginBottom="@dimen/_16sdp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Assign to a business"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/colorWhite"
+                android:layout_marginBottom="@dimen/_8sdp"/>
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_16sdp"
+                app:ms_arrow_tint="@color/bald"
+                app:ms_background_color="@color/colorWhite"
+                app:ms_hide_arrow="false"
+                android:textColor="@color/bald"
+                tools:text="Spinner"/>
+
         </LinearLayout>
-
-
-
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_38sdp"
-            android:background="@drawable/create_tune_btn"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:text="add number"
-            android:textColor="@color/colorRed"
-            android:textSize="@dimen/_14ssp"
-            android:layout_marginBottom="@dimen/_16sdp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Assign to a business"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:textSize="@dimen/_12ssp"
-            android:textColor="@color/colorWhite"
-            android:layout_marginBottom="@dimen/_8sdp"/>
-
-
-        <com.jaredrummler.materialspinner.MaterialSpinner android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            app:ms_arrow_tint="@color/bald"
-            app:ms_background_color="@color/colorWhite"
-            app:ms_hide_arrow="false"
-            android:textColor="@color/bald"
-            tools:text="Spinner"/>
-
-
-
-
-
     </LinearLayout>
 
-
-
-
-
-
-</RelativeLayout>
+</FrameLayout>

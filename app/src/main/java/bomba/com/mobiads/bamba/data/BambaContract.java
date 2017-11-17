@@ -37,6 +37,7 @@ public class BambaContract {
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_PATH ="file_path";
         public static final String COLUMN_STATUS ="status";
+        public static final String COLUMN_DESCRIPTION ="description";
         public static final String COLUMN_CREATED_AT ="created_at";
 
         public static final String[] PROJECTION = {
@@ -45,6 +46,7 @@ public class BambaContract {
                 COLUMN_NAME,
                 COLUMN_PATH,
                 COLUMN_STATUS,
+                COLUMN_DESCRIPTION,
                 COLUMN_CREATED_AT
         };
     }

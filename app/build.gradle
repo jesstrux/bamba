@@ -56,4 +56,8 @@ dependencies {
     compile 'net.the4thdimension:audio-wife:1.0.3'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.0.1'
+
+    compile 'com.github.angads25:filepicker:1.1.1'
+    compile 'com.nononsenseapps:filepicker:4.1.0'
+    compile 'com.droidninja:filepicker:2.1.0'
 }
